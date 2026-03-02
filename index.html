@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Tennis Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f1f6e;
+      --blue-deep: #1a5276;
+      --blue-mid: #2471a3;
+      --blue-bright: #2e86c1;
+      --blue-light: #aed6f1;
+      --sky: #d5eaf3;
+      --green: #4caf50;
+      --green-bright: #8fc978;
+      --white: #ffffff;
+      --text-dark: #0d2137;
+      --text-mid: #1a4a6b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue-deep) 40%, var(--blue-mid) 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 60px 24px;
+    }
+
+    .hero-arc {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+    .hero-arc:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -150px; }
+    .hero-arc:nth-child(2) { width: 900px; height: 900px; top: -350px; right: -300px; }
+    .hero-arc:nth-child(3) { width: 400px; height: 400px; bottom: -150px; left: -100px; border-color: rgba(140,200,120,0.08); }
+
+    .tennis-ball {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #c8e86a, #8fc978);
+      pointer-events: none;
+      opacity: 0.15;
+    }
+    .tennis-ball:nth-child(4) { width: 120px; height: 120px; top: 10%; left: 5%; animation: float1 8s ease-in-out infinite; }
+    .tennis-ball:nth-child(5) { width: 60px; height: 60px; bottom: 15%; right: 8%; animation: float2 6s ease-in-out infinite; }
+
+    @keyframes float1 { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(15deg); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 700px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 8px 18px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge span { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue-light); }
+    .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-bright); }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 10vw, 100px);
+      line-height: 0.95;
+      color: var(--white);
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-title-accent {
+      color: var(--green-bright);
+      display: block;
+    }
+
+    .hero-tagline {
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--green-bright), var(--green));
+      color: var(--text-dark);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(79,175,79,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(79,175,79,0.45); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+    /* ── STATS BAND ── */
+    .stats-band {
+      background: var(--sky);
+      padding: 40px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: var(--blue-deep);
+      line-height: 1;
+    }
+    .stat-label { font-size: 13px; font-weight: 600; color: var(--text-mid); opacity: 0.7; margin-top: 4px; letter-spacing: 0.5px; }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue-mid);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      color: var(--text-dark);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-mid);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--sky);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue-bright), var(--green-bright));
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(26,82,118,0.3);
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works {
+      background: linear-gradient(135deg, var(--navy), var(--blue-deep));
+      padding: 100px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how-it-works::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.04);
+      top: -200px; right: -150px;
+    }
+
+    .how-content { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .how-it-works .section-tag { color: var(--green-bright); }
+    .how-it-works .section-title { color: var(--white); }
+    .how-it-works .section-sub { color: rgba(255,255,255,0.6); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .step-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: rgba(255,255,255,0.08);
+      line-height: 1;
+      margin-bottom: -10px;
+    }
+
+    .step-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .step-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.65;
+    }
+
+    /* ── FOR ADMINS ── */
+    .admin-section {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    @media (max-width: 700px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+
+    .admin-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+
+    .admin-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .admin-list-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .admin-list-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 3px;
+    }
+
+    .admin-list-text span {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    .admin-visual {
+      background: linear-gradient(135deg, var(--navy), var(--blue-deep));
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .admin-visual::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.06);
+      top: -60px; right: -60px;
+    }
+
+    .mock-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mock-card-left { display: flex; align-items: center; gap: 10px; }
+    .mock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-bright); flex-shrink: 0; }
+    .mock-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .mock-sub { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .mock-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(143,201,120,0.2);
+      color: var(--green-bright);
+      white-space: nowrap;
+    }
+    .mock-badge.full { background: rgba(243,156,18,0.2); color: #f39c12; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--sky);
+      padding: 100px 24px;
+      text-align: center;
+    }
+
+    .cta-section .section-title { margin-bottom: 16px; }
+    .cta-section .section-sub { margin: 0 auto 40px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--white);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .stats-band { gap: 32px; }
+      .hero-cta-row { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-arc"></div>
+    <div class="hero-arc"></div>
+    <div class="hero-arc"></div>
+    <div class="tennis-ball"></div>
+    <div class="tennis-ball"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Available on iOS & Android</span>
+      </div>
+
+      <h1 class="hero-title">
+        Social Tennis
+        <span class="hero-title-accent">Manager</span>
+      </h1>
+
+      <p class="hero-tagline">
+        The simplest way to organise your tennis club sessions —<br>
+        from sign-ups and draws to waitlists and payments.
+      </p>
+
+      <div class="hero-cta-row">
+        <a href="#" class="btn-primary">
+          🍏 Download on iOS
+        </a>
+        <a href="#" class="btn-secondary">
+          🤖 Get it on Android
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-band">
+    <div class="stat-item reveal">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Sessions per club</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Free to join</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-number">2</div>
+      <div class="stat-label">Platforms supported</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Tap to join a session</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-tag reveal">Features</p>
+    <h2 class="section-title reveal">Everything your club needs</h2>
+    <p class="section-sub reveal">Built specifically for social tennis — no bloat, no complexity. Just the tools that matter.</p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎾</div>
+        <h3 class="feature-title">Session Sign-Ups</h3>
+        <p class="feature-desc">Players join sessions in seconds. Automatic waitlist management promotes players when spots open up.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title">Automated Draw</h3>
+        <p class="feature-desc">Generate balanced court draws instantly. Mix partners between rounds, customise court names, and publish with one tap.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Club-Scoped Access</h3>
+        <p class="feature-desc">Each club gets its own private space. Players access their club via a unique code — completely separate from other clubs.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">💳</div>
+        <h3 class="feature-title">Payment Tracking</h3>
+        <p class="feature-desc">Players mark themselves as paid. Admins confirm payments and track who's settled up — no spreadsheets needed.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔔</div>
+        <h3 class="feature-title">Admin Notifications</h3>
+        <p class="feature-desc">Get notified when players join, leave, or submit payment. Stay on top of your session without checking constantly.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📋</div>
+        <h3 class="feature-title">Terms & Conditions</h3>
+        <p class="feature-desc">Set custom terms for your club that all players can read. Update anytime and it syncs instantly across all devices.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <div class="how-content">
+      <p class="section-tag reveal">How it works</p>
+      <h2 class="section-title reveal">Up and running in minutes</h2>
+      <p class="section-sub reveal">No setup fee, no training required. Your club is live in four simple steps.</p>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-number">01</div>
+          <span class="step-icon">📱</span>
+          <h3 class="step-title">Download the app</h3>
+          <p class="step-desc">Available free on iOS and Android. Install in seconds.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">02</div>
+          <span class="step-icon">🔑</span>
+          <h3 class="step-title">Enter your club code</h3>
+          <p class="step-desc">Your admin shares the club code. Enter it once and you're in.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">03</div>
+          <span class="step-icon">✅</span>
+          <h3 class="step-title">Join a session</h3>
+          <p class="step-desc">See upcoming sessions, tap to join, pick your level. Done.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">04</div>
+          <span class="step-icon">🎯</span>
+          <h3 class="step-title">View the draw</h3>
+          <p class="step-desc">When the admin publishes the draw, see your court and partners instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR ADMINS -->
+  <section class="admin-section">
+    <div class="admin-grid">
+      <div>
+        <p class="section-tag reveal">For administrators</p>
+        <h2 class="section-title reveal">Powerful tools,<br>simple interface</h2>
+        <p class="section-sub reveal">Everything an organiser needs to run a smooth session — all in one place.</p>
+
+        <ul class="admin-list">
+          <li class="reveal">
+            <div class="admin-list-icon">📅</div>
+            <div class="admin-list-text">
+              <strong>Create & manage sessions</strong>
+              <span>Set date, time, location and capacity. Edit or cancel anytime.</span>
+            </div>
+          </li>
+          <li class="reveal">
+            <div class="admin-list-icon">🔀</div>
+            <div class="admin-list-text">
+              <strong>Build and publish draws</strong>
+              <span>Auto-assign players to courts with smart partner rotation across rounds.</span>
+            </div>
+          </li>
+          <li class="reveal">
+            <div class="admin-list-icon">👥</div>
+            <div class="admin-list-text">
+              <strong>Manage players</strong>
+              <span>Remove players, confirm payments, and manage the waitlist with one tap.</span>
+            </div>
+          </li>
+          <li class="reveal">
+            <div class="admin-list-icon">⚙️</div>
+            <div class="admin-list-text">
+              <strong>Club settings</strong>
+              <span>Control level visibility, waitlist promotions, and payment requirements.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="admin-visual reveal">
+        <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px;">Sunday Social Doubles</div>
+        <div style="font-size:20px; font-weight:900; color:#fff; margin-bottom:16px;">Session Dashboard</div>
+
+        <div class="mock-card">
+          <div class="mock-card-left">
+            <div class="mock-dot"></div>
+            <div>
+              <div class="mock-title">Sarah Mitchell</div>
+              <div class="mock-sub">Intermediate · Joined 9:12am</div>
+            </div>
+          </div>
+          <div class="mock-badge">Paid ✓</div>
+        </div>
+
+        <div class="mock-card">
+          <div class="mock-card-left">
+            <div class="mock-dot"></div>
+            <div>
+              <div class="mock-title">James Okafor</div>
+              <div class="mock-sub">Advanced · Joined 9:34am</div>
+            </div>
+          </div>
+          <div class="mock-badge">Paid ✓</div>
+        </div>
+
+        <div class="mock-card">
+          <div class="mock-card-left">
+            <div class="mock-dot" style="background:#f39c12;"></div>
+            <div>
+              <div class="mock-title">Priya Sharma</div>
+              <div class="mock-sub">Beginner · Waitlist #1</div>
+            </div>
+          </div>
+          <div class="mock-badge full">Reserve</div>
+        </div>
+
+        <div style="margin-top:8px; background:rgba(143,201,120,0.15); border:1px solid rgba(143,201,120,0.3); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px;">
+          <span style="font-size:18px;">🎾</span>
+          <div>
+            <div style="font-size:12px; font-weight:800; color:#8fc978;">Draw Published</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.5);">3 courts · 2 rounds</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <p class="section-tag reveal">Get started today</p>
+    <h2 class="section-title reveal">Your club deserves<br>better tools</h2>
+    <p class="section-sub reveal">Free to download. No account needed to join a session. Just tennis.</p>
+
+    <div class="hero-cta-row reveal">
+      <a href="#" class="btn-primary">🍏 Download on iOS</a>
+      <a href="#" class="btn-secondary" style="background:rgba(26,82,118,0.12); border-color:rgba(26,82,118,0.25); color:var(--text-dark);">🤖 Get it on Android</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Social Tennis Manager</div>
+    <div class="footer-links">
+      <a href="./privacy-policy.html">Privacy Policy</a>
+      <a href="mailto:bernardsakran@gmail.com">Contact</a>
+    </div>
+    <p class="footer-copy">© 2026 Social Tennis Manager. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
